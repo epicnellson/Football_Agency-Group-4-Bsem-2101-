@@ -1,4 +1,7 @@
-# Football Agent Management System
+GROUP 4 BSEM 2101
+
+Football Agent Management System
+A comprehensive user management system for a Football Agent website built with PHP and MySQL as part of Assignment 2.
 
 A comprehensive web-based football agency management system built with PHP, MySQL, and modern web technologies. This system manages football players, agents, and club managers with role-based access control.
 
