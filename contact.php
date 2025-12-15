@@ -88,7 +88,7 @@ session_start();
                     <!-- Contact Form -->
                     <div class="contact-form-container">
                         <h3>Send Us a Message</h3>
-                        <form class="contact-form" action="#" method="POST">
+                        <form class="contact-form" action="php/process_contact.php" method="POST">
                             <div class="form-group">
                                 <label for="name">Full Name *</label>
                                 <input type="text" id="name" name="name" required>
@@ -119,8 +119,23 @@ session_start();
                                 <textarea id="message" name="message" rows="5" required placeholder="Tell us about your football goals and how we can help..."></textarea>
                             </div>
                             
+                            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); ?>">
                             <button type="submit" class="submit-btn">Send Message</button>
                         </form>
+                        
+                        <?php
+                        // Display success or error messages
+                        if (isset($_GET['success'])) {
+                            echo '<div class="success-message" style="background: #d4edda; color: #155724; padding: 1rem; border-radius: 5px; margin-top: 1rem; border: 1px solid #c3e6cb;">';
+                            echo '<strong>✓ Message sent successfully!</strong><br>We will get back to you soon.';
+                            echo '</div>';
+                        } elseif (isset($_GET['error'])) {
+                            $error = urldecode($_GET['error']);
+                            echo '<div class="error-message" style="background: #f8d7da; color: #721c24; padding: 1rem; border-radius: 5px; margin-top: 1rem; border: 1px solid #f5c6cb;">';
+                            echo '<strong>✗ Error:</strong> ' . htmlspecialchars($error);
+                            echo '</div>';
+                        }
+                        ?>
                     </div>
 
                     <!-- Map -->

@@ -1,7 +1,287 @@
-Football Agent Management System
-A comprehensive user management system for a Football Agent website built with PHP and MySQL as part of Assignment 2.
+# Football Agent Management System
 
-🎯 Assignment Requirements Completed
+A comprehensive web-based football agency management system built with PHP, MySQL, and modern web technologies. This system manages football players, agents, and club managers with role-based access control.
+
+## 🚀 Features
+
+### Core Functionality
+- **User Authentication**: Secure login system with role-based access control
+- **Role Management**: Four distinct user roles (Admin, Player, Agent, Club Manager)
+- **Profile Management**: Comprehensive user profiles with role-specific information
+- **Admin Dashboard**: Complete administrative control over users and system data
+
+### User Roles
+- **Admin**: Full system access, user management, dashboard overview
+- **Player**: Personal profile, statistics tracking, agent assignment
+- **Agent**: Player representation, license management, experience tracking
+- **Club Manager**: Club information management, player scouting
+
+### Technical Features
+- **Secure Authentication**: Password hashing, session management, CSRF protection
+- **Input Validation**: Comprehensive server-side validation and sanitization
+- **Database Design**: Normalized relational database with foreign key constraints
+- **Responsive Design**: Mobile-friendly interface with modern CSS
+- **Error Handling**: Robust error logging and user-friendly error messages
+
+## 📋 System Requirements
+
+### Server Requirements
+- **PHP**: Version 7.4 or higher
+- **MySQL**: Version 5.7 or higher / MariaDB 10.2+
+- **Web Server**: Apache or Nginx with mod_rewrite enabled
+- **PHP Extensions**: mysqli, session, filter, json
+
+### Browser Support
+- Chrome 80+
+- Firefox 75+
+- Safari 13+
+- Edge 80+
+
+## 🛠️ Installation Guide
+
+### 1. Database Setup
+
+1. **Create Database**
+   ```sql
+   CREATE DATABASE football_agent_db;
+   ```
+
+2. **Import Schema**
+   ```bash
+   mysql -u root -p football_agent_db < football_agent_db.sql
+   ```
+
+3. **Verify Tables**
+   - `users` - User accounts and authentication
+   - `players` - Player profiles and statistics
+   - `agents` - Agent information and licensing
+   - `club_managers` - Club management details
+
+### 2. Configuration
+
+1. **Database Connection**
+   Edit `php/dbConnect.php`:
+   ```php
+   $serverName = "localhost";
+   $userName = "root";
+   $password = "your_password";
+   $dbName = "football_agent_db";
+   ```
+
+2. **File Permissions**
+   ```bash
+   chmod 755 php/
+   chmod 644 php/*.php
+   chmod 755 php/models/
+   chmod 644 php/models/*.php
+   ```
+
+### 3. Web Server Setup
+
+#### XAMPP Setup
+1. Place project in `htdocs/codee/`
+2. Start Apache and MySQL services
+3. Access via `http://localhost/codee/`
+
+## 👤 Default Accounts
+
+| Role | Username | Password | Access Level |
+|------|----------|----------|--------------|
+| Admin | admin1 | password | Full system access |
+| Admin | admin2 | password | Full system access |
+| Player | musa_tombo | password | Player profile |
+| Player | kai_kamara | password | Player profile |
+| Agent | nelson_agent | password | Agent dashboard |
+| Agent | sarah_agent | password | Agent dashboard |
+| Club Manager | club_manager1 | password | Club management |
+| Club Manager | club_manager2 | password | Club management |
+
+## 📁 Project Structure
+
+```
+codee/
+├── index.php                 # Homepage
+├── contact.php               # Contact page with form
+├── services.php              # About and services page
+├── styles.css                # Main stylesheet
+├── images/                   # Image assets
+├── php/
+│   ├── login.php            # Login page
+│   ├── logout.php           # Logout functionality
+│   ├── dashboard.php        # User dashboard
+│   ├── profile.php          # User profile management
+│   ├── process_contact.php  # Contact form handler
+│   ├── dbConnect.php        # Database connection
+│   ├── includes/
+│   │   ├── auth_check.php   # Authentication middleware
+│   │   └── admin_check.php  # Admin access control
+│   ├── models/
+│   │   ├── UserModel.php    # User data operations
+│   │   ├── PlayerModel.php  # Player data operations
+│   │   └── UserManager.php  # Role-specific operations
+│   └── admin/
+│       ├── dashboard.php    # Admin dashboard
+│       ├── create_user.php  # User creation
+│       ├── users.php        # User management
+│       ├── edit_user.php    # User editing
+│       └── tables/          # Data display tables
+└── football_agent_db.sql    # Database schema
+```
+
+## 🔧 Configuration Options
+
+### Security Settings
+- **Session Timeout**: 24 hours default
+- **Password Requirements**: Minimum 6 characters
+- **CSRF Protection**: Enabled on all forms
+- **Input Sanitization**: HTML filtering and validation
+
+### Email Configuration
+Edit `php/process_contact.php` for email settings:
+```php
+$to = 'your-email@domain.com';
+```
+
+## 🚀 Usage Guide
+
+### For Administrators
+1. Login with admin credentials
+2. Access admin dashboard via navigation
+3. Create new users with appropriate roles
+4. Manage existing users (edit/delete)
+5. Monitor system statistics
+
+### For Players
+1. Login with player credentials
+2. View personal dashboard
+3. Update profile information
+4. Track player statistics
+
+### For Agents
+1. Login with agent credentials
+2. Manage assigned players
+3. Update agent information
+4. Track performance metrics
+
+### For Club Managers
+1. Login with club manager credentials
+2. Manage club information
+3. View player profiles
+4. Update club details
+
+## 🔒 Security Features
+
+### Implemented Security Measures
+- **Password Hashing**: Uses PHP's `password_hash()` with bcrypt
+- **SQL Injection Prevention**: Prepared statements for all database queries
+- **XSS Protection**: HTML special characters encoding
+- **CSRF Protection**: Token-based validation on all forms
+- **Input Validation**: Server-side validation and sanitization
+- **Session Security**: Secure session configuration
+
+### Recommended Additional Security
+- HTTPS implementation
+- Rate limiting on login attempts
+- Password complexity requirements
+- Two-factor authentication
+- Regular security audits
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+#### Database Connection Errors
+```
+Error: Connection failed: Access denied for user
+```
+**Solution**: Verify database credentials in `php/dbConnect.php`
+
+#### Session Issues
+```
+Error: Headers already sent
+```
+**Solution**: Ensure no output before `session_start()`
+
+#### Permission Errors
+```
+Error: Permission denied
+```
+**Solution**: Check file permissions and ownership
+
+#### Email Not Sending
+```
+Error: Email sending failed
+```
+**Solution**: Configure mail server settings in PHP.ini
+
+### Debug Mode
+Enable error reporting for development:
+```php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+```
+
+## 📊 Performance Considerations
+
+### Database Optimization
+- Indexed primary and foreign keys
+- Optimized queries with proper joins
+- Connection pooling for high traffic
+
+### Caching Strategy
+- Static asset caching via headers
+- Database query result caching
+- Session data optimization
+
+## 🔄 Version History
+
+### Version 1.0 (Current)
+- Initial release with core functionality
+- User authentication and role management
+- Admin dashboard and user management
+- Contact form with email integration
+- Security hardening and validation
+
+## 🤝 Contributing
+
+### Development Guidelines
+1. Follow PSR-4 autoloading standards
+2. Use prepared statements for all database queries
+3. Implement proper error handling
+4. Add comprehensive documentation
+5. Test all functionality before deployment
+
+### Code Style
+- Use 4 spaces for indentation
+- Follow PHP naming conventions
+- Add PHPDoc comments to all functions
+- Validate all user inputs
+
+## 📞 Support
+
+### Technical Support
+- **Email**: nelson@footballagent.sl
+- **Phone**: +232 79 826-564
+- **Address**: 15 Goderich Street, Freetown, Sierra Leone
+
+### Documentation
+- **User Manual**: Available in admin dashboard
+- **API Documentation**: Included in model files
+- **Database Schema**: See `football_agent_db.sql`
+
+## 📄 License
+
+This project is proprietary software developed for Football Agent Sierra Leone. All rights reserved.
+
+---
+
+**Developed by**: Football Agent SL Team  
+**Last Updated**: December 2025  
+**Version**: 1.0.0
+
+---
+
+## 🎯 Assignment Requirements Completed
 ✅ User Roles & Database
 4 User Roles: Admin, Player, Agent, Club Manager
 

@@ -1,14 +1,45 @@
 <?php
-// php/models/PlayerModel.php
+/**
+ * PlayerModel.php
+ * Handles all database operations for player management
+ * Includes CRUD operations for player profiles and related queries
+ * 
+ * @author Football Agent SL Team
+ * @version 1.0
+ * @package Models
+ */
+
 class PlayerModel {
+    /** @var mysqli Database connection object */
     private $conn;
+    
+    /** @var string Name of players table */
     private $table_name = "players";
 
+    /**
+     * Constructor - Initialize database connection
+     * 
+     * @param mysqli $db Database connection object
+     */
     public function __construct($db) {
         $this->conn = $db;
     }
 
-    // Create player profile
+    /**
+     * Create player profile
+     * 
+     * @param int $user_id User ID from users table
+     * @param string $date_of_birth Player's date of birth
+     * @param string $position Player position (Goalkeeper, Defender, Midfielder, Forward)
+     * @param float $height Player height in cm
+     * @param float $weight Player weight in kg
+     * @param string $preferred_foot Preferred foot (Left, Right, Both)
+     * @param string $current_club Current club name
+     * @param int $agent_id Agent ID (optional)
+     * @param string $video_url Video URL (optional)
+     * @param string $stats Player statistics in JSON format
+     * @return bool True on success, false on failure
+     */
     public function create($user_id, $date_of_birth, $position, $height, $weight, $preferred_foot, $current_club, $agent_id, $video_url, $stats) {
         $query = "INSERT INTO " . $this->table_name . " 
                  (user_id, date_of_birth, position, height, weight, preferred_foot, current_club, agent_id, video_url, stats) 

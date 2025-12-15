@@ -13,16 +13,46 @@ $message = '';
 $agents = $userManager->getAvailableAgents();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Basic user data
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $role = $_POST['role'];
-    $first_name = $_POST['first_name'];
-    $last_name = $_POST['last_name'];
-    $phone = $_POST['phone'];
-    $address = $_POST['address'];
-    $date_of_birth = $_POST['date_of_birth'];
+    // CSRF Token Validation
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("CSRF token validation failed");
+    }
+    
+    // Input validation and sanitization
+    $username = htmlspecialchars(trim($_POST['username']), ENT_QUOTES, 'UTF-8');
+    $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
+    $password = trim($_POST['password']);
+    $role = htmlspecialchars(trim($_POST['role']), ENT_QUOTES, 'UTF-8');
+    $first_name = htmlspecialchars(trim($_POST['first_name']), ENT_QUOTES, 'UTF-8');
+    $last_name = htmlspecialchars(trim($_POST['last_name']), ENT_QUOTES, 'UTF-8');
+    $phone = htmlspecialchars(trim($_POST['phone']), ENT_QUOTES, 'UTF-8');
+    $address = htmlspecialchars(trim($_POST['address']), ENT_QUOTES, 'UTF-8');
+    $date_of_birth = htmlspecialchars(trim($_POST['date_of_birth']), ENT_QUOTES, 'UTF-8');
+    
+    // Basic validation
+    $errors = [];
+    if (empty($username) || strlen($username) < 3) {
+        $errors[] = "Username must be at least 3 characters";
+    }
+    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Valid email is required";
+    }
+    if (empty($password) || strlen($password) < 6) {
+        $errors[] = "Password must be at least 6 characters";
+    }
+    if (empty($role) || !in_array($role, ['admin', 'player', 'agent', 'club_manager'])) {
+        $errors[] = "Valid role is required";
+    }
+    if (empty($first_name) || strlen($first_name) < 2) {
+        $errors[] = "First name must be at least 2 characters";
+    }
+    if (empty($last_name) || strlen($last_name) < 2) {
+        $errors[] = "Last name must be at least 2 characters";
+    }
+    
+    if (!empty($errors)) {
+        throw new Exception(implode(', ', $errors));
+    }
 
     try {
         // Check if username already exists
@@ -192,6 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php echo $message; ?>
             
             <form method="POST" id="userForm">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); ?>">
                 <div class="form-row">
                     <div class="form-group">
                         <label>Username *</label>

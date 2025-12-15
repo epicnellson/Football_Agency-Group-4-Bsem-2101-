@@ -1,13 +1,39 @@
 <?php
-// models/UserManager.php
+/**
+ * UserManager.php
+ * Handles role-specific user management operations
+ * Manages creation and retrieval of player, agent, and club manager profiles
+ * 
+ * @author Football Agent SL Team
+ * @version 1.0
+ * @package Models
+ */
+
 class UserManager {
+    /** @var mysqli Database connection object */
     private $conn;
 
+    /**
+     * Constructor - Initialize database connection
+     * 
+     * @param mysqli $db Database connection object
+     */
     public function __construct($db) {
         $this->conn = $db;
     }
 
-    // Create player profile - FIXED to handle NULL values properly
+    /**
+     * Create player profile with proper NULL value handling
+     * 
+     * @param int $user_id User ID from users table
+     * @param string $position Player position
+     * @param float|null $height Player height in cm (null if not provided)
+     * @param float|null $weight Player weight in kg (null if not provided)
+     * @param string $preferred_foot Preferred foot
+     * @param string|null $current_club Current club name (null if not provided)
+     * @param int|null $agent_id Agent ID (null if not assigned)
+     * @return bool True on success, false on failure
+     */
     public function createPlayer($user_id, $position, $height, $weight, $preferred_foot, $current_club, $agent_id) {
         $query = "INSERT INTO players 
                  (user_id, position, height, weight, preferred_foot, current_club, agent_id) 

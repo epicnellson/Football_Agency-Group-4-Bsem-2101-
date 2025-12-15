@@ -9,17 +9,27 @@ $message = '';
 
 // Handle user deletion
 if (isset($_GET['delete_id'])) {
-    $delete_id = $_GET['delete_id'];
+    // CSRF Token Validation for GET requests
+    if (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("CSRF token validation failed");
+    }
     
-    // Prevent admin from deleting themselves
-    if ($delete_id != $_SESSION['user_id']) {
-        if ($userModel->delete($delete_id)) {
-            $message = "<div class='success'>User deleted successfully!</div>";
-        } else {
-            $message = "<div class='error'>Error deleting user!</div>";
-        }
+    $delete_id = filter_var($_GET['delete_id'], FILTER_SANITIZE_NUMBER_INT);
+    
+    // Validate ID
+    if (!is_numeric($delete_id) || $delete_id <= 0) {
+        $message = "<div class='error'>Invalid user ID!</div>";
     } else {
-        $message = "<div class='error'>You cannot delete your own account!</div>";
+        // Prevent admin from deleting themselves
+        if ($delete_id != $_SESSION['user_id']) {
+            if ($userModel->delete($delete_id)) {
+                $message = "<div class='success'>User deleted successfully!</div>";
+            } else {
+                $message = "<div class='error'>Error deleting user!</div>";
+            }
+        } else {
+            $message = "<div class='error'>You cannot delete your own account!</div>";
+        }
     }
 }
 
@@ -196,7 +206,7 @@ $users = $userModel->readAll();
                             echo "<td class='action-buttons'>";
                             echo "<a href='edit_user.php?id={$user['id']}' class='btn btn-edit'>Edit</a>";
                             if ($user['id'] != $_SESSION['user_id']) {
-                                echo "<a href='users.php?delete_id={$user['id']}' class='btn btn-danger' onclick='return confirm(\"Are you sure you want to delete {$user['username']}?\")'>Delete</a>";
+                                echo "<a href='users.php?delete_id={$user['id']}&csrf_token=" . urlencode($_SESSION['csrf_token'] = bin2hex(random_bytes(32))) . "' class='btn btn-danger' onclick='return confirm(\"Are you sure you want to delete {$user['username']}?\")'>Delete</a>";
                             } else {
                                 echo "<button class='btn' style='background: #6c757d; color: white;' disabled>Delete</button>";
                             }

@@ -196,10 +196,10 @@ if (isset($_GET['confirm']) && $_GET['confirm'] === 'true') {
                 </div>
                 <div class="social-links">
                     <h4>Follow Us</h4>
-                    <a href="#" aria-label="Facebook">Facebook</a>
-                    <a href="#" aria-label="Twitter">Twitter</a>
-                    <a href="#" aria-label="Instagram">Instagram</a>
-                    <a href="#" aria-label="LinkedIn">LinkedIn</a>
+                    <a href="" aria-label="Facebook">Facebook</a>
+                    <a href="" aria-label="Twitter">Twitter</a>
+                    <a href="" aria-label="Instagram">Instagram</a>
+                    <a href="" aria-label="LinkedIn">LinkedIn</a>
                 </div>
             </div>
             <div class="copyright">

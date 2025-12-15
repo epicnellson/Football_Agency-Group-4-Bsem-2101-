@@ -10,10 +10,24 @@ $userModel = new UserModel($conn);
 $login_error = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = trim($_POST['username']);
+    // CSRF Token Validation
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("CSRF token validation failed");
+    }
+    
+    // Input validation and sanitization
+    $username = htmlspecialchars(trim($_POST['username']), ENT_QUOTES, 'UTF-8');
     $password = trim($_POST['password']);
     
-    $user = $userModel->verifyLogin($username, $password);
+    // Basic validation
+    if (empty($username) || empty($password)) {
+        $login_error = 'Username and password are required!';
+    } elseif (strlen($username) < 3) {
+        $login_error = 'Username must be at least 3 characters!';
+    } elseif (strlen($password) < 6) {
+        $login_error = 'Password must be at least 6 characters!';
+    } else {
+        $user = $userModel->verifyLogin($username, $password);
     
     if ($user) {
         // Login successful
@@ -24,14 +38,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['last_name'] = $user['last_name'];
         $_SESSION['email'] = $user['email'];
         
-        // Redirect based on role
-        if ($user) {
-            // ... session setup code ...
-            header('Location: ../index.php'); // Redirect to homepage
-            exit();
+        // Redirect to homepage
+        header('Location: ../index.php');
+        exit();
+        } else {
+            $login_error = 'Invalid username or password!';
         }
-    } else {
-        $login_error = 'Invalid username or password!';
     }
 }
 ?>
@@ -123,6 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php endif; ?>
             
             <form method="POST" action="">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); ?>">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" required>
